@@ -52,6 +52,11 @@ public class Player implements IPlayer {
         //Historic data to analyze and decide next move...
         ArrayList<Result> results = (ArrayList<Result>) state.getHistoricResults();
 
+        for (Result r: results) {
+            if (r.getWinnerPlayer().getPlayerType() == PlayerType.Human)
+                System.out.println(r.getWinnerPlayer().getPlayerName() + ":" + r.getWinnerMove());
+        }
+
         //whenever there is a draw, the chances of the player choosing anything becomes random
         draw = new double[][]{
                 {0.33, 0.33, 0.33},
