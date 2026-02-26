@@ -17,7 +17,9 @@ public class Player implements IPlayer {
 
     private String name;
     private PlayerType type;
-
+    private double[][] draw;
+    private double[][] won;
+    private double[][] loss;
     /**
      * @param name
      */
@@ -46,11 +48,31 @@ public class Player implements IPlayer {
      */
     @Override
     public Move doMove(IGameState state) {
+
         //Historic data to analyze and decide next move...
         ArrayList<Result> results = (ArrayList<Result>) state.getHistoricResults();
 
-        //Implement better AI here...
+        //whenever there is a draw, the chances of the player choosing anything becomes random
+        draw = new double[][]{
+                {0.33, 0.33, 0.33},
+                {0.33, 0.33, 0.33},
+                {0.33, 0.33, 0.33}};
 
+        /*When the AI wins going down it,s Rock, Paper, Scissor. Across it's Rock, Paper, Scissor
+        It shows the likelihood of the player choosing RPS*/
+        won = new double[][] {
+                {0.3, 0.6, 0.1},
+                {0.1, 0.3, 0.6},
+                {0.6, 0.1, 0.3}};
+
+        /*When the AI losses with RPS this shows the chances that
+        the player will choose something other than what they chose before*/
+        loss = new double[][]{
+                {0.2, 0.6, 0.2},
+                {0.2, 0.2, 0.6},
+                {0.6, 0.2, 0.2}};
+
+        //Implement better AI here...
         return Move.Paper;
     }
 }
