@@ -7,6 +7,7 @@ import rps.bll.game.Result;
 
 //Java imports
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -18,9 +19,6 @@ public class Player implements IPlayer {
 
     private String name;
     private PlayerType type;
-    private int scissors = 0;
-    private int paper = 0;
-    private int rock = 0;
     private double[][] draw;
     private double[][] won;
     private double[][] loss;
@@ -56,31 +54,37 @@ public class Player implements IPlayer {
     @Override
     public Move doMove(IGameState state) {
 
-        //Historic data to analyze and decide next move...
-        ArrayList<Result> results = (ArrayList<Result>) state.getHistoricResults();
+        int rock = 0;
+        int paper = 0;
+        int scissors = 0;
+
+        List<Result> results = (List<Result>) state.getHistoricResults();
 
         for (Result r : results) {
-            if (r.getWinnerPlayer().getPlayerType() == PlayerType.Human)
-                if (r.getWinnerMove() == Move.Scissor) {
-                    scissors++;
+            if (r.getWinnerPlayer() != null &&
+                    r.getWinnerPlayer().getPlayerType() == PlayerType.Human) {
+
+                if (r.getWinnerMove() == Move.Rock) {
+                    rock++;
                 } else if (r.getWinnerMove() == Move.Paper) {
                     paper++;
-                } else if (r.getWinnerMove() == Move.Rock) {
-                    rock++;
+                } else if (r.getWinnerMove() == Move.Scissor) {
+                    scissors++;
                 }
+            }
         }
 
-        if (scissors <= 1) {
-            scissors--;
-            return Move.Rock;
-        } else if (paper <= 1) {
-            paper--;
-            return Move.Scissor;
-        } else if (rock <= 1) {
-            rock--;
-            return Move.Paper;
+        if (rock == 0 && paper == 0 && scissors == 0) {
+            return Move.values()[RANDOM.nextInt(Move.values().length)];
         }
-        return Move.values()[RANDOM.nextInt(Move.values().length)];
+
+        if (rock >= paper && rock >= scissors) {
+            return Move.Paper;
+        } else if (paper >= rock && paper >= scissors) {
+            return Move.Scissor;
+        } else {
+            return Move.Rock;
+        }
     }
 }
 
