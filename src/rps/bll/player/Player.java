@@ -18,10 +18,12 @@ public class Player implements IPlayer {
 
     private String name;
     private PlayerType type;
+    private int scissors = 0;
+    private int paper = 0;
+    private int rock = 0;
     private double[][] draw;
     private double[][] won;
     private double[][] loss;
-    private static final String[] MOVES = {"Rock", "Paper", "Scissors"};
     private static final Random RANDOM = new Random();
 
     /**
@@ -47,6 +49,7 @@ public class Player implements IPlayer {
 
     /**
      * Decides the next move for the bot...
+     *
      * @param state Contains the current game state including historic moves/results
      * @return Next move
      */
@@ -56,36 +59,28 @@ public class Player implements IPlayer {
         //Historic data to analyze and decide next move...
         ArrayList<Result> results = (ArrayList<Result>) state.getHistoricResults();
 
-        for (Result r: results) {
+        for (Result r : results) {
             if (r.getWinnerPlayer().getPlayerType() == PlayerType.Human)
-                System.out.println(r.getWinnerPlayer().getPlayerName() + ":" + r.getWinnerMove());
+                if (r.getWinnerMove() == Move.Scissor) {
+                    scissors++;
+                } else if (r.getWinnerMove() == Move.Paper) {
+                    paper++;
+                } else if (r.getWinnerMove() == Move.Rock) {
+                    rock++;
+                }
         }
 
-        //whenever there is a draw, the chances of the player choosing anything becomes random
-        draw = new double[][]{
-                {0.33, 0.33, 0.33},
-                {0.33, 0.33, 0.33},
-                {0.33, 0.33, 0.33}};
-
-        /*When the AI wins going down it,s Rock, Paper, Scissor. Across it's Rock, Paper, Scissor
-        It shows the likelihood of the player choosing RPS*/
-        won = new double[][] {
-                {0.3, 0.6, 0.1},
-                {0.1, 0.3, 0.6},
-                {0.6, 0.1, 0.3}};
-
-        /*When the AI losses with RPS this shows the chances that
-        the player will choose something other than what they chose before*/
-        loss = new double[][]{
-                {0.2, 0.6, 0.2},
-                {0.2, 0.2, 0.6},
-                {0.6, 0.2, 0.2}};
-
-        //Implement better AI here...
-        return Move.Paper;
-    }
-        public static String getRandomMove() {
-            return MOVES[RANDOM.nextInt(MOVES.length)];
+        if (scissors <= 1) {
+            scissors--;
+            return Move.Rock;
+        } else if (paper <= 1) {
+            paper--;
+            return Move.Scissor;
+        } else if (rock <= 1) {
+            rock--;
+            return Move.Paper;
         }
+        return Move.values()[RANDOM.nextInt(Move.values().length)];
     }
+}
 
