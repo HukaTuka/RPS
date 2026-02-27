@@ -7,6 +7,7 @@ import rps.bll.game.Result;
 
 //Java imports
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Example implementation of a player.
@@ -20,6 +21,9 @@ public class Player implements IPlayer {
     private double[][] draw;
     private double[][] won;
     private double[][] loss;
+    private static final String[] MOVES = {"Rock", "Paper", "Scissors"};
+    private static final Random RANDOM = new Random();
+
     /**
      * @param name
      */
@@ -80,4 +84,8 @@ public class Player implements IPlayer {
         //Implement better AI here...
         return Move.Paper;
     }
-}
+        public static String getRandomMove() {
+            return MOVES[RANDOM.nextInt(MOVES.length)];
+        }
+    }
+
